@@ -39,10 +39,11 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
             transform: `translateX(${translateX}px)`,
             transition: transitionStyle,
             willChange: 'transform',
+            paddingTop: 'env(safe-area-inset-top)',
           }}
         >
           <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-4 border-b border-plutopia-dark">
+            <div className="flex items-center justify-between p-4 border-b border-plutopia-dark mt-4">
               <div className="flex items-center gap-2">
                 <Ghost size={24} className="text-plutopia-accent" />
                 <span className="text-white font-semibold">Plutopia</span>

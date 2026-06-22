@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'black',
     title: 'Plutopia',
   },
   icons: {
@@ -40,6 +40,8 @@ export const viewport: Viewport = {
   themeColor: '#1f2937',
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: 'cover',
 }
 
