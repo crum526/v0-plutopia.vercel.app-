@@ -7,11 +7,11 @@ interface HeaderProps {
 
 export function Header({ onSidebarToggle, sidebarOpen }: HeaderProps) {
   return (
-    <header className="bg-plutopia-dark border-b border-plutopia-darker px-4 py-4 sticky top-0 z-40">
+    <header className="bg-plutopia-dark border-b border-plutopia-darker px-4 py-4 sticky top-0 z-40" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
       <div className="max-w-2xl mx-auto flex items-center justify-between">
         <button
           onClick={onSidebarToggle}
-          className="text-plutopia-ghost hover:text-white transition-colors"
+          className="text-plutopia-ghost hover:text-white transition-colors touch-manipulation"
           aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
         >
           <Menu size={28} />

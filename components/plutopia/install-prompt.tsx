@@ -61,7 +61,10 @@ export function InstallPrompt() {
   if (!visible) return null
 
   return (
-    <div className="fixed left-1/2 -translate-x-1/2 bottom-24 z-[70] w-[calc(100%-2rem)] max-w-md animate-in fade-in">
+    <div
+      className="fixed left-1/2 -translate-x-1/2 z-[70] w-[calc(100%-2rem)] max-w-md animate-in fade-in"
+      style={{ bottom: 'calc(6rem + env(safe-area-inset-bottom))' }}
+    >
       <div className="bg-plutopia-dark border border-plutopia-darker rounded-2xl shadow-2xl p-4 flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-plutopia-accent/15">
           <Download size={20} className="text-plutopia-accent" />
