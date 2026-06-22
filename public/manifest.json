@@ -1,0 +1,47 @@
+{
+  "name": "Plutopia - Gaming Community",
+  "short_name": "Plutopia",
+  "description": "Experience gaming content like never before",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#111827",
+  "theme_color": "#1f2937",
+  "icons": [
+    {
+      "src": "/plutopia-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/plutopia-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/plutopia-icon-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["entertainment", "video"],
+  "shortcuts": [
+    {
+      "name": "Watch Videos",
+      "short_name": "Videos",
+      "description": "Watch gaming videos on Plutopia",
+      "url": "/?tab=videos",
+      "icons": [
+        {
+          "src": "/plutopia-icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

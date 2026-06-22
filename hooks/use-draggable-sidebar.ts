@@ -1,0 +1,214 @@
+'use client'
+
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+interface DraggableSidebarOptions {
+  onOpen: () => void
+  onClose: () => void
+  isOpen: boolean
+}
+
+interface DragState {
+  isDragging: boolean
+  currentX: number
+  startX: number
+  startY: number
+  startTime: number
+  directionLocked: 'horizontal' | 'vertical' | null
+  sidebarWidth: number
+}
+
+export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSidebarOptions) {
+  const dragState = useRef<DragState>({
+    isDragging: false,
+    currentX: 0,
+    startX: 0,
+    startY: 0,
+    startTime: 0,
+    directionLocked: null,
+    sidebarWidth: 0,
+  })
+
+  const [translateX, setTranslateX] = useState(isOpen ? 0 : -100)
+  const [isDragging, setIsDragging] = useState(false)
+  const [bottomNavTranslate, setBottomNavTranslate] = useState(0)
+  const [overlayOpacity, setOverlayOpacity] = useState(0)
+  const [sidebarWidth, setSidebarWidth] = useState(280)
+  const sidebarRef = useRef<HTMLDivElement>(null)
+
+  const getSidebarWidth = useCallback(() => {
+    if (typeof window === 'undefined') return 280
+    const isMobile = window.innerWidth < 640
+    return isMobile ? window.innerWidth * 0.85 : 280
+  }, [])
+
+  const getMaxTranslate = useCallback(() => {
+    return -getSidebarWidth()
+  }, [getSidebarWidth])
+
+  const updateVisuals = useCallback(
+    (x: number, dragging: boolean) => {
+      const maxTranslate = getMaxTranslate()
+      const clampedX = Math.max(maxTranslate, Math.min(0, x))
+      const progress = 1 - clampedX / maxTranslate
+
+      setTranslateX(clampedX)
+      setIsDragging(dragging)
+      setOverlayOpacity(progress)
+
+      const navTranslate = progress * 100
+      setBottomNavTranslate(navTranslate)
+    },
+    [getMaxTranslate]
+  )
+
+  const snap = useCallback(
+    (targetX: number) => {
+      const maxTranslate = getMaxTranslate()
+      const clampedTarget = Math.max(maxTranslate, Math.min(0, targetX))
+      const threshold = maxTranslate / 2
+
+      const shouldOpen = clampedTarget > threshold
+
+      if (shouldOpen) {
+        onOpen()
+        updateVisuals(0, false)
+      } else {
+        onClose()
+        updateVisuals(maxTranslate, false)
+      }
+    },
+    [getMaxTranslate, onOpen, onClose, updateVisuals]
+  )
+
+  const handleTouchStart = useCallback(
+    (e: TouchEvent) => {
+      const touch = e.touches[0]
+      const width = getSidebarWidth()
+
+      dragState.current = {
+        isDragging: true,
+        currentX: isOpen ? 0 : -width,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        startTime: Date.now(),
+        directionLocked: null,
+        sidebarWidth: width,
+      }
+
+      updateVisuals(dragState.current.currentX, true)
+    },
+    [isOpen, getSidebarWidth, updateVisuals]
+  )
+
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      const state = dragState.current
+      if (!state.isDragging) return
+
+      const touch = e.touches[0]
+      const dx = touch.clientX - state.startX
+      const dy = touch.clientY - state.startY
+
+      if (!state.directionLocked) {
+        const absDx = Math.abs(dx)
+        const absDy = Math.abs(dy)
+
+        if (absDx > 8 || absDy > 8) {
+          if (absDx > absDy) {
+            state.directionLocked = 'horizontal'
+          } else {
+            state.directionLocked = 'vertical'
+            state.isDragging = false
+            setIsDragging(false)
+            return
+          }
+        } else {
+          return
+        }
+      }
+
+      if (state.directionLocked === 'vertical') {
+        return
+      }
+
+      e.preventDefault()
+
+      const baseX = isOpen ? 0 : -state.sidebarWidth
+      const newX = baseX + dx
+      state.currentX = newX
+      updateVisuals(newX, true)
+    },
+    [isOpen, updateVisuals]
+  )
+
+  const handleTouchEnd = useCallback(() => {
+    const state = dragState.current
+    if (!state.isDragging) return
+
+    state.isDragging = false
+    setIsDragging(false)
+
+    const elapsed = Date.now() - state.startTime
+    const dx = state.currentX - (isOpen ? 0 : -state.sidebarWidth)
+    const velocity = elapsed > 0 ? Math.abs(dx) / elapsed : 0
+
+    const maxTranslate = getMaxTranslate()
+    const threshold = maxTranslate / 2
+
+    const fastSwipe = velocity > 0.4
+
+    if (isOpen) {
+      if (dx < threshold || fastSwipe) {
+        snap(-state.sidebarWidth)
+      } else {
+        snap(0)
+      }
+    } else {
+      if (dx > threshold || fastSwipe) {
+        snap(0)
+      } else {
+        snap(-state.sidebarWidth)
+      }
+    }
+  }, [isOpen, getMaxTranslate, snap])
+
+  useEffect(() => {
+    setSidebarWidth(getSidebarWidth())
+    const onResize = () => setSidebarWidth(getSidebarWidth())
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [getSidebarWidth])
+
+  useEffect(() => {
+    if (!isDragging) {
+      const targetX = isOpen ? 0 : getMaxTranslate()
+      setTranslateX(targetX)
+      setBottomNavTranslate(isOpen ? 0 : 100)
+      setOverlayOpacity(isOpen ? 1 : 0)
+    }
+  }, [isOpen, isDragging, getMaxTranslate])
+
+  useEffect(() => {
+    document.addEventListener('touchstart', handleTouchStart, { passive: true })
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    document.addEventListener('touchend', handleTouchEnd, { passive: true })
+    document.addEventListener('touchcancel', handleTouchEnd, { passive: true })
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
+      document.removeEventListener('touchcancel', handleTouchEnd)
+    }
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd])
+
+  return {
+    sidebarRef,
+    translateX,
+    isDragging,
+    bottomNavTranslate,
+    overlayOpacity,
+    sidebarWidth,
+  }
+}
