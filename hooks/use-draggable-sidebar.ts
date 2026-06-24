@@ -50,6 +50,9 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
 
   const updateVisuals = useCallback(
     (x: number, dragging: boolean, isHorizontalDrag: boolean = false) => {
+      // Lock sidebar position during hydration phase
+      if (!isHydrated) return
+
       const maxTranslate = getMaxTranslate()
       const clampedX = Math.max(maxTranslate, Math.min(0, x))
       const progress = 1 - clampedX / maxTranslate
@@ -64,11 +67,14 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
         setBottomNavTranslate(navTranslate)
       }
     },
-    [getMaxTranslate]
+    [getMaxTranslate, isHydrated]
   )
 
   const snap = useCallback(
     (targetX: number) => {
+      // Prevent snapping during hydration phase
+      if (!isHydrated) return
+
       const maxTranslate = getMaxTranslate()
       const clampedTarget = Math.max(maxTranslate, Math.min(0, targetX))
       const threshold = maxTranslate / 2
@@ -83,11 +89,14 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
         updateVisuals(maxTranslate, false)
       }
     },
-    [getMaxTranslate, onOpen, onClose, updateVisuals]
+    [getMaxTranslate, onOpen, onClose, updateVisuals, isHydrated]
   )
 
   const handleTouchStart = useCallback(
     (e: TouchEvent) => {
+      // Disable all touch interactions during hydration
+      if (!isHydrated) return
+
       const touch = e.touches[0]
       const width = getSidebarWidth()
 
@@ -105,7 +114,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
       setTranslateX(dragState.current.currentX)
       setIsDragging(true)
     },
-    [isOpen, getSidebarWidth]
+    [isOpen, getSidebarWidth, isHydrated]
   )
 
   const handleTouchMove = useCallback(
