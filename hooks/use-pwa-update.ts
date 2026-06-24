@@ -50,6 +50,8 @@ export const usePWAUpdate = () => {
       return;
     }
 
+    let updateInterval: NodeJS.Timeout | undefined;
+
     // Register service worker and check for updates
     navigator.serviceWorker
       .register('/sw.js', { scope: '/' })
@@ -60,7 +62,7 @@ export const usePWAUpdate = () => {
         registration.update();
 
         // Check for updates every 30 seconds
-        const updateInterval = setInterval(() => {
+        updateInterval = setInterval(() => {
           registration.update();
         }, 30000);
 
@@ -92,56 +94,15 @@ export const usePWAUpdate = () => {
             }
           });
         });
-
-        return () => clearInterval(updateInterval);
       })
       .catch((error) => {
         console.error('[v0] Service Worker registration failed:', error);
       });
-  }, []);
-
-  return { ...updateState, handleUpdate };
-};
-
-    // Check for updates when service worker controller changes
-    navigator.serviceWorker.addEventListener('controllerchange', handleServiceWorkerUpdate);
-
-    // Register service worker and check for updates
-    navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
-      .then((registration) => {
-        // Check for updates immediately
-        registration.update();
-
-        // Check for updates every 30 seconds
-        const updateInterval = setInterval(() => {
-          registration.update();
-        }, 30000);
-
-        // Listen for when a new service worker is waiting to be activated
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (!newWorker) return;
-
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // A new service worker is ready to take over
-              setUpdateState({
-                updateAvailable: true,
-                waitingServiceWorker: navigator.serviceWorker,
-              });
-            }
-          });
-        });
-
-        return () => clearInterval(updateInterval);
-      })
-      .catch((error) => {
-        console.error('Service Worker registration failed:', error);
-      });
 
     return () => {
-      navigator.serviceWorker.removeEventListener('controllerchange', handleServiceWorkerUpdate);
+      if (updateInterval) {
+        clearInterval(updateInterval);
+      }
     };
   }, []);
 
