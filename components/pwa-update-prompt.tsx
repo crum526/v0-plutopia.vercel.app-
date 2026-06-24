@@ -7,9 +7,11 @@ import { useEffect, useState } from 'react';
 export function PWAUpdatePrompt() {
   const { updateAvailable, handleUpdate } = usePWAUpdate();
   const [isVisible, setIsVisible] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     if (updateAvailable) {
+      console.log('[v0] Update available, showing prompt');
       // Show the prompt after a short delay
       const timer = setTimeout(() => {
         setIsVisible(true);
@@ -17,6 +19,12 @@ export function PWAUpdatePrompt() {
       return () => clearTimeout(timer);
     }
   }, [updateAvailable]);
+
+  const handleUpdateClick = () => {
+    console.log('[v0] Update Now clicked');
+    setIsUpdating(true);
+    handleUpdate();
+  };
 
   if (!isVisible) return null;
 
@@ -38,10 +46,11 @@ export function PWAUpdatePrompt() {
             Later
           </button>
           <button
-            onClick={handleUpdate}
-            className="px-3 py-2 text-xs font-medium bg-plutopia-neon-blue text-plutopia-darker hover:bg-plutopia-neon-cyan transition-colors rounded"
+            onClick={handleUpdateClick}
+            disabled={isUpdating}
+            className="px-3 py-2 text-xs font-medium bg-plutopia-neon-blue text-plutopia-darker hover:bg-plutopia-neon-cyan transition-colors rounded disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Update Now
+            {isUpdating ? 'Updating...' : 'Update Now'}
           </button>
         </div>
       </div>
