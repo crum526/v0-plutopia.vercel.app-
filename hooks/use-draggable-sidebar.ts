@@ -114,7 +114,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
         const absDx = Math.abs(dx)
         const absDy = Math.abs(dy)
 
-        if (absDx > 8 || absDy > 8) {
+        if (absDx > 5 || absDy > 5) {
           if (absDx > absDy) {
             state.directionLocked = 'horizontal'
           } else {
@@ -155,18 +155,27 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
 
     const maxTranslate = getMaxTranslate()
     const threshold = maxTranslate / 2
+    
+    // Require minimum 5px swipe distance to trigger action
+    const minSwipeDistance = 5
+    const absDx = Math.abs(dx)
 
     const fastSwipe = velocity > 0.4
+    const significantSwipe = absDx >= minSwipeDistance
 
     if (isOpen) {
-      if (dx < threshold || fastSwipe) {
+      if ((dx < threshold && significantSwipe) || fastSwipe) {
         snap(-state.sidebarWidth)
-      } else {
+      } else if (significantSwipe) {
         snap(0)
+      } else {
+        snap(isOpen ? 0 : -state.sidebarWidth)
       }
     } else {
-      if (dx > threshold || fastSwipe) {
+      if ((dx > threshold && significantSwipe) || fastSwipe) {
         snap(0)
+      } else if (significantSwipe) {
+        snap(-state.sidebarWidth)
       } else {
         snap(-state.sidebarWidth)
       }
