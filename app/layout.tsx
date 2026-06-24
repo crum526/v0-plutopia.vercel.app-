@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
+import { PWAUpdatePrompt } from '@/components/pwa-update-prompt'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
@@ -54,6 +55,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} bg-plutopia-darker`}>
       <body className="font-sans antialiased">
         {children}
+        <PWAUpdatePrompt />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
