@@ -39,7 +39,7 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
             width: `${sidebarWidth}px`,
             transform: `translateX(${translateX}px)`,
             transition: transitionStyle,
-            willChange: 'transform',
+            willChange: isHydrated ? 'transform' : 'auto',
             paddingTop: 'env(safe-area-inset-top)',
           }}
         >
@@ -106,7 +106,8 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
           style={{
             opacity: overlayOpacity,
             pointerEvents: isOpen || isDragging ? 'auto' : 'none',
-            transition: isDragging ? 'none' : 'opacity 0.3s ease',
+            transition: !isHydrated || isDragging ? 'none' : 'opacity 0.3s ease',
+            willChange: isHydrated ? 'opacity' : 'auto',
           }}
           onClick={onClose}
         />
