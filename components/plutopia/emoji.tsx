@@ -1,11 +1,27 @@
 interface EmojiProps {
-  char: string
+  char?: string
+  src?: string
   size?: number
   className?: string
 }
 
-export function Emoji({ char, size = 20, className = '' }: EmojiProps) {
-  const codepoint = [...char]
+export function Emoji({ char, src, size = 20, className = '' }: EmojiProps) {
+  // If src is provided, use the image directly
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt="emoji"
+        width={size}
+        height={size}
+        className={className}
+        draggable={false}
+      />
+    )
+  }
+
+  // Otherwise, use unicode emoji
+  const codepoint = [...(char || '')]
     .map((c) => c.codePointAt(0)!.toString(16))
     .filter((cp) => parseInt(cp, 16) !== 0xfe0f) // strip variation selectors
     .join('-')

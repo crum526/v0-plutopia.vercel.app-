@@ -22,7 +22,8 @@ const channels = [
   { emoji: '🚗', label: 'Cars' },
   { emoji: '🤳', label: 'Selfies' },
   { emoji: '😂', label: 'Memes' },
-  { emoji: '🎮', label: 'Code: PLutovswrld' },
+  { src: '/sprites-emoji.png', label: 'Sprites' },
+  { emoji: '🎮', label: 'Code: Plutovswrld' },
   { emoji: '🔓', label: 'Unban Requests' },
 ]
 
@@ -90,7 +91,7 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
                         key={index}
                         className="flex items-center gap-3 text-plutopia-ghost hover:text-white transition-colors w-full"
                       >
-                        <Emoji char={ch.emoji} size={20} />
+                        <Emoji char={(ch as any).emoji} src={(ch as any).src} size={20} />
                         <span className="text-sm">{ch.label}</span>
                       </button>
                     ))}
