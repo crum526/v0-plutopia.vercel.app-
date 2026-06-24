@@ -102,7 +102,7 @@ export function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col w-full h-screen bg-plutopia-darker text-white">
+    <div className="flex flex-col w-full flex-1 bg-plutopia-darker text-white h-full">
       {/* Chat Header */}
       <div className="border-b border-plutopia-dark px-4 py-3">
         <h2 className="text-lg font-semibold flex items-center gap-2">

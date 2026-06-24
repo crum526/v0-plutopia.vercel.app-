@@ -91,12 +91,8 @@ export function PlutopiaApp() {
       <div className="flex-1 flex flex-col">
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} />
 
-        <main className={`flex-1 flex flex-col items-center justify-start ${activeTab === 'chat' ? '' : 'pb-32 px-4 py-2'} overflow-y-auto`}>
-          {activeTab === 'chat' && (
-            <div className="w-full flex-1 flex flex-col">
-              <ChatPage />
-            </div>
-          )}
+        <main className={`flex-1 flex flex-col ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 overflow-y-auto'}`}>
+          {activeTab === 'chat' && <ChatPage />}
           {activeTab === 'vods' && (
             <div className="w-full max-w-2xl mx-auto">
               <div className="flex flex-col gap-4">
