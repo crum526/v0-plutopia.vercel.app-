@@ -14,8 +14,9 @@ export function Emoji({ char, src, size = 20, className = '' }: EmojiProps) {
         alt="emoji"
         width={size}
         height={size}
-        className={className}
+        className={`${className} object-contain bg-transparent`}
         draggable={false}
+        style={{ backgroundColor: 'transparent' }}
       />
     )
   }
