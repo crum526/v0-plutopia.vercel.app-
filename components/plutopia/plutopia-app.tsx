@@ -36,7 +36,7 @@ export function PlutopiaApp() {
     return () => window.removeEventListener('resize', checkDesktop)
   }, [])
 
-  const { sidebarRef, translateX, isDragging, bottomNavTranslate, overlayOpacity, sidebarWidth } =
+  const { sidebarRef, translateX, isDragging, bottomNavTranslate, overlayOpacity, sidebarWidth, isHydrated } =
     useDraggableSidebar({
       onOpen: () => setSidebarOpen(true),
       onClose: () => setSidebarOpen(false),
@@ -80,6 +80,7 @@ export function PlutopiaApp() {
         isDragging={isDragging}
         overlayOpacity={overlayOpacity}
         sidebarWidth={sidebarWidth}
+        isHydrated={isHydrated}
       />
 
       <div className="flex-1 flex flex-col">

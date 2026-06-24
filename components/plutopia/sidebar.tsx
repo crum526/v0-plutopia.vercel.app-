@@ -10,6 +10,7 @@ interface SidebarProps {
   isDragging: boolean
   overlayOpacity: number
   sidebarWidth: number
+  isHydrated?: boolean
 }
 
 const channels = [
@@ -26,8 +27,8 @@ const channels = [
 ]
 
 export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
-  ({ isOpen, onClose, onNavigateToVods, translateX, isDragging, overlayOpacity, sidebarWidth }, ref) => {
-    const transitionStyle = isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)'
+  ({ isOpen, onClose, onNavigateToVods, translateX, isDragging, overlayOpacity, sidebarWidth, isHydrated = false }, ref) => {
+    const transitionStyle = !isHydrated || isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)'
 
     return (
       <>

@@ -34,6 +34,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
   const [bottomNavTranslate, setBottomNavTranslate] = useState(isOpen ? -100 : 100)
   const [overlayOpacity, setOverlayOpacity] = useState(0)
   const [sidebarWidth, setSidebarWidth] = useState(280)
+  const [isHydrated, setIsHydrated] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
 
   const getSidebarWidth = useCallback(() => {
@@ -189,6 +190,10 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
   }, [isOpen, getMaxTranslate, snap])
 
   useEffect(() => {
+    setIsHydrated(true)
+  }, [])
+
+  useEffect(() => {
     setSidebarWidth(getSidebarWidth())
     const onResize = () => setSidebarWidth(getSidebarWidth())
     window.addEventListener('resize', onResize)
@@ -225,5 +230,6 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
     bottomNavTranslate,
     overlayOpacity,
     sidebarWidth,
+    isHydrated,
   }
 }
