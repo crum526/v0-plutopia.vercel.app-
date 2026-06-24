@@ -58,7 +58,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
 
       // Only update bottom nav if it's an actual horizontal drag
       if (isHorizontalDrag) {
-        const navTranslate = -progress * 100
+        const navTranslate = (1 - progress) * 100
         setBottomNavTranslate(navTranslate)
       }
     },
@@ -199,7 +199,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
     if (!isDragging) {
       const targetX = isOpen ? 0 : getMaxTranslate()
       setTranslateX(targetX)
-      setBottomNavTranslate(isOpen ? -100 : 100)
+      setBottomNavTranslate(isOpen ? 0 : 100)
       setOverlayOpacity(isOpen ? 1 : 0)
     }
   }, [isOpen, isDragging, getMaxTranslate])
