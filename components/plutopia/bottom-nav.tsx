@@ -4,9 +4,10 @@ interface BottomNavProps {
   activeTab: string
   onTabChange: (tab: string) => void
   translateY?: number
+  isDragging?: boolean
 }
 
-export function BottomNav({ activeTab, onTabChange, translateY = 0 }: BottomNavProps) {
+export function BottomNav({ activeTab, onTabChange, translateY = 0, isDragging = false }: BottomNavProps) {
   const tabs = [
     
     { id: 'chat', label: 'Chat', icon: Users },
@@ -19,7 +20,7 @@ export function BottomNav({ activeTab, onTabChange, translateY = 0 }: BottomNavP
       className="fixed bottom-0 left-0 right-0 bg-plutopia-darker border-t border-plutopia-dark px-0 py-3 safe-area-inset-bottom z-[60]"
       style={{
         transform: `translateY(${translateY}px)`,
-        transition: 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
+        transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
         willChange: 'transform',
       }}
     >

@@ -47,7 +47,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
   }, [getSidebarWidth])
 
   const updateVisuals = useCallback(
-    (x: number, dragging: boolean) => {
+    (x: number, dragging: boolean, isHorizontalDrag: boolean = false) => {
       const maxTranslate = getMaxTranslate()
       const clampedX = Math.max(maxTranslate, Math.min(0, x))
       const progress = 1 - clampedX / maxTranslate
@@ -56,8 +56,11 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
       setIsDragging(dragging)
       setOverlayOpacity(progress)
 
-      const navTranslate = progress * 100
-      setBottomNavTranslate(navTranslate)
+      // Only update bottom nav if it's an actual horizontal drag
+      if (isHorizontalDrag) {
+        const navTranslate = progress * 100
+        setBottomNavTranslate(navTranslate)
+      }
     },
     [getMaxTranslate]
   )
@@ -96,9 +99,11 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
         sidebarWidth: width,
       }
 
-      updateVisuals(dragState.current.currentX, true)
+      // Don't update bottom nav visuals on touch start
+      setTranslateX(dragState.current.currentX)
+      setIsDragging(true)
     },
-    [isOpen, getSidebarWidth, updateVisuals]
+    [isOpen, getSidebarWidth]
   )
 
   const handleTouchMove = useCallback(
@@ -137,7 +142,8 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
       const baseX = isOpen ? 0 : -state.sidebarWidth
       const newX = baseX + dx
       state.currentX = newX
-      updateVisuals(newX, true)
+      // Only update bottom nav visuals when confirmed horizontal drag
+      updateVisuals(newX, true, state.directionLocked === 'horizontal')
     },
     [isOpen, updateVisuals]
   )
