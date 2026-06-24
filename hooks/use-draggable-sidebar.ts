@@ -29,11 +29,6 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
     sidebarWidth: 0,
   })
 
-  const [translateX, setTranslateX] = useState(-100)
-  const [isDragging, setIsDragging] = useState(false)
-  const [bottomNavTranslate, setBottomNavTranslate] = useState(100)
-  const [overlayOpacity, setOverlayOpacity] = useState(0)
-  const [sidebarWidth, setSidebarWidth] = useState(280)
   const [isHydrated, setIsHydrated] = useState(false)
   const isFirstRender = useRef(true)
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -43,6 +38,12 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
     const isMobile = window.innerWidth < 640
     return isMobile ? window.innerWidth * 0.85 : 280
   }, [])
+
+  const [sidebarWidth, setSidebarWidth] = useState(getSidebarWidth())
+  const [translateX, setTranslateX] = useState(-sidebarWidth)
+  const [isDragging, setIsDragging] = useState(false)
+  const [bottomNavTranslate, setBottomNavTranslate] = useState(100)
+  const [overlayOpacity, setOverlayOpacity] = useState(0)
 
   const getMaxTranslate = useCallback(() => {
     return -getSidebarWidth()
