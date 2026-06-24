@@ -6,6 +6,7 @@ interface SidebarProps {
   isOpen: boolean
   onClose: () => void
   onNavigateToVods: () => void
+  onChannelClick?: (channelLabel: string) => void
   translateX: number
   isDragging: boolean
   overlayOpacity: number
@@ -28,7 +29,7 @@ const channels = [
 ]
 
 export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
-  ({ isOpen, onClose, onNavigateToVods, translateX, isDragging, overlayOpacity, sidebarWidth, isHydrated = false }, ref) => {
+  ({ isOpen, onClose, onNavigateToVods, onChannelClick, translateX, isDragging, overlayOpacity, sidebarWidth, isHydrated = false }, ref) => {
     const transitionStyle = !isHydrated || isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)'
 
     return (
@@ -89,6 +90,12 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
                     {channels.map((ch, index) => (
                       <button
                         key={index}
+                        onClick={() => {
+                          if (ch.label === 'Living Room') {
+                            onChannelClick?.('chat')
+                          }
+                          onClose()
+                        }}
                         className="flex items-center gap-3 text-plutopia-ghost hover:text-white transition-colors w-full"
                       >
                         <Emoji char={(ch as any).emoji} src={(ch as any).src} size={20} />
