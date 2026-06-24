@@ -29,12 +29,13 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
     sidebarWidth: 0,
   })
 
-  const [translateX, setTranslateX] = useState(isOpen ? 0 : -100)
+  const [translateX, setTranslateX] = useState(-100)
   const [isDragging, setIsDragging] = useState(false)
-  const [bottomNavTranslate, setBottomNavTranslate] = useState(isOpen ? -100 : 100)
+  const [bottomNavTranslate, setBottomNavTranslate] = useState(100)
   const [overlayOpacity, setOverlayOpacity] = useState(0)
   const [sidebarWidth, setSidebarWidth] = useState(280)
   const [isHydrated, setIsHydrated] = useState(false)
+  const isFirstRender = useRef(true)
   const sidebarRef = useRef<HTMLDivElement>(null)
 
   const getSidebarWidth = useCallback(() => {
@@ -205,6 +206,12 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
   }, [getSidebarWidth])
 
   useEffect(() => {
+    // Skip snap effect on first render to prevent glitch
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
     if (!isDragging) {
       const targetX = isOpen ? 0 : getMaxTranslate()
       setTranslateX(targetX)
