@@ -190,7 +190,11 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
   }, [isOpen, getMaxTranslate, snap])
 
   useEffect(() => {
-    setIsHydrated(true)
+    // Add a small delay before enabling transitions to prevent initial render glitch
+    const timer = setTimeout(() => {
+      setIsHydrated(true)
+    }, 50)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
