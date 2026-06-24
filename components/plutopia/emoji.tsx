@@ -6,7 +6,7 @@ interface EmojiProps {
 }
 
 export function Emoji({ char, src, size = 20, className = '' }: EmojiProps) {
-  // If src is provided, use the image directly
+  // If src is provided, use the image directly (same rendering as unicode)
   if (src) {
     return (
       <img
@@ -14,9 +14,8 @@ export function Emoji({ char, src, size = 20, className = '' }: EmojiProps) {
         alt="emoji"
         width={size}
         height={size}
-        className={`${className} object-contain bg-transparent`}
+        className={className}
         draggable={false}
-        style={{ backgroundColor: 'transparent' }}
       />
     )
   }
