@@ -111,7 +111,7 @@ export function PlutopiaApp() {
           )}
         </main>
 
-        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} translateY={bottomNavTranslate} />
+        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} translateY={bottomNavTranslate} isDragging={isDragging} />
       </div>
 
       <UnderConstructionModal
