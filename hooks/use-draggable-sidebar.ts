@@ -31,7 +31,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
 
   const [translateX, setTranslateX] = useState(isOpen ? 0 : -100)
   const [isDragging, setIsDragging] = useState(false)
-  const [bottomNavTranslate, setBottomNavTranslate] = useState(0)
+  const [bottomNavTranslate, setBottomNavTranslate] = useState(isOpen ? -100 : 100)
   const [overlayOpacity, setOverlayOpacity] = useState(0)
   const [sidebarWidth, setSidebarWidth] = useState(280)
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -199,7 +199,7 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
     if (!isDragging) {
       const targetX = isOpen ? 0 : getMaxTranslate()
       setTranslateX(targetX)
-      setBottomNavTranslate(isOpen ? -100 : 0)
+      setBottomNavTranslate(isOpen ? -100 : 100)
       setOverlayOpacity(isOpen ? 1 : 0)
     }
   }, [isOpen, isDragging, getMaxTranslate])
