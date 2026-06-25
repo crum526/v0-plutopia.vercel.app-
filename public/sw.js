@@ -1,4 +1,4 @@
-const CACHE_NAME = 'plutopia-' + new Date().getTime();
+const CACHE_NAME = 'plutopia-v' + self.__VERSION__ || 'plutopia-static';
 const urlsToCache = ['/', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -6,11 +6,13 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache).catch(() => {
-        console.log('Some assets failed to cache');
+        console.log('[SW] Some assets failed to cache');
       });
     })
   );
-  self.skipWaiting();
+  // Do NOT call self.skipWaiting() here.
+  // The new SW waits until the user confirms the update via the in-app prompt,
+  // which then sends SKIP_WAITING to trigger activation.
 });
 
 self.addEventListener('activate', (event) => {
@@ -28,22 +30,12 @@ self.addEventListener('activate', (event) => {
     })
   );
   self.clients.claim();
-  
-  // Notify all clients that an update is available
-  self.clients.matchAll().then((clients) => {
-    clients.forEach((client) => {
-      client.postMessage({
-        type: 'SW_UPDATED',
-        message: 'Service worker updated'
-      });
-    });
-  });
 });
 
 self.addEventListener('message', (event) => {
   console.log('[SW] Message received:', event.data);
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log('[SW] SKIP_WAITING received, skipping to next version');
+    console.log('[SW] SKIP_WAITING received, activating new version');
     self.skipWaiting();
   }
 });

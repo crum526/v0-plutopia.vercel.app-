@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { RefreshCw, X } from 'lucide-react'
 
 export function UpdatePrompt() {
   const [showUpdate, setShowUpdate] = useState(false)
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null)
+  const pendingUpdate = useRef(false)
 
   useEffect(() => {
     if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
@@ -13,75 +14,62 @@ export function UpdatePrompt() {
     }
 
     const handleControllerChange = () => {
-      console.log('[v0] Service worker controller changed, reloading')
-      setShowUpdate(false)
-      window.location.reload()
-    }
-
-    const handleSWMessage = (event: MessageEvent) => {
-      if (event.data && event.data.type === 'SW_UPDATED') {
-        console.log('[v0] Service worker update notification received')
-        setShowUpdate(true)
+      // Only reload when the user explicitly clicked "Update Now".
+      // Without this guard, the first SW install also fires controllerchange
+      // and would cause an unwanted reload.
+      if (pendingUpdate.current) {
+        window.location.reload()
       }
     }
 
-    // Check for updates when the component mounts
     navigator.serviceWorker.ready.then((registration) => {
-      console.log('[v0] Service worker ready')
-      
-      // Check if there's already a waiting worker
+      console.log('[SW] Service worker ready')
+
+      // If a new SW is already waiting (e.g. page was refreshed after update landed)
       if (registration.waiting) {
-        console.log('[v0] Found existing waiting worker')
+        console.log('[SW] Found existing waiting worker')
         setWaitingWorker(registration.waiting)
         setShowUpdate(true)
       }
 
-      // Listen for waiting service worker
+      // Detect when a new SW finishes installing and enters the waiting state
       registration.addEventListener('updatefound', () => {
-        console.log('[v0] Update found')
+        console.log('[SW] Update found')
         const newWorker = registration.installing
-        if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            console.log('[v0] New worker state:', newWorker.state)
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // New service worker is ready
-              console.log('[v0] New service worker installed and ready')
-              setWaitingWorker(newWorker)
-              setShowUpdate(true)
-            }
-          })
-        }
+        if (!newWorker) return
+
+        newWorker.addEventListener('statechange', () => {
+          console.log('[SW] New worker state:', newWorker.state)
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // New SW is installed and waiting — show the update banner
+            console.log('[SW] New version waiting — showing update prompt')
+            setWaitingWorker(newWorker)
+            setShowUpdate(true)
+          }
+        })
       })
 
-      // Check for updates every 30 seconds instead of 60
+      // Poll for updates every 30 seconds
       const interval = setInterval(() => {
-        console.log('[v0] Checking for updates')
-        registration.update().catch(() => {
-          // Silently handle errors
-        })
+        registration.update().catch(() => {})
       }, 30000)
 
       return () => clearInterval(interval)
     })
 
-    // Listen for SW messages
-    navigator.serviceWorker.addEventListener('message', handleSWMessage)
-    
-    // Listen for controller change to reload when update is applied
     navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange)
 
     return () => {
-      navigator.serviceWorker.removeEventListener('message', handleSWMessage)
       navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange)
     }
   }, [])
 
   const handleUpdate = () => {
-    if (waitingWorker) {
-      console.log('[v0] Sending SKIP_WAITING to service worker')
-      waitingWorker.postMessage({ type: 'SKIP_WAITING' })
-      setShowUpdate(false)
-    }
+    if (!waitingWorker) return
+    console.log('[SW] User confirmed update — sending SKIP_WAITING')
+    pendingUpdate.current = true
+    waitingWorker.postMessage({ type: 'SKIP_WAITING' })
+    setShowUpdate(false)
   }
 
   const handleDismiss = () => {
