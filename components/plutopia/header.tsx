@@ -11,7 +11,7 @@ export function Header({ onSidebarToggle, sidebarOpen }: HeaderProps) {
       <div className="max-w-2xl mx-auto flex items-center justify-between h-12">
         <button
           onClick={onSidebarToggle}
-          className="text-plutopia-ghost hover:text-white transition-colors touch-manipulation"
+          className="md:hidden text-plutopia-ghost hover:text-white transition-colors touch-manipulation"
           aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
         >
           <Menu size={24} />

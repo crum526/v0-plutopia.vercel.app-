@@ -5,6 +5,7 @@ import { Header } from './header'
 import { VideoPlayer } from './video-player'
 import { BottomNav } from './bottom-nav'
 import { Sidebar } from './sidebar'
+import { DesktopSidebar } from './sidebar-desktop'
 import { UnderConstructionModal } from './under-construction-modal'
 import { InstallPrompt } from './install-prompt'
 import { ChatPage } from './chat-page'
@@ -74,7 +75,8 @@ export function PlutopiaApp() {
   }
 
   return (
-    <div className="min-h-screen bg-plutopia-darker text-white flex flex-col">
+    <div className="min-h-screen bg-plutopia-darker text-white flex">
+      {/* Mobile sidebar drawer */}
       <Sidebar
         ref={sidebarRef}
         isOpen={sidebarOpen}
@@ -88,10 +90,16 @@ export function PlutopiaApp() {
         isHydrated={isHydrated}
       />
 
+      {/* Desktop sidebar */}
+      <DesktopSidebar
+        onNavigateToVods={handleNavigateToVods}
+        onChannelClick={handleTabChange}
+      />
+
       <div className="flex-1 flex flex-col">
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} />
 
-        <main className={`flex-1 flex flex-col ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 overflow-y-auto'}`}>
+        <main className={`flex-1 flex flex-col ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 overflow-y-auto md:pb-4'}`}>
           {activeTab === 'chat' && <ChatPage />}
           {activeTab === 'vods' && (
             <div className="w-full max-w-2xl mx-auto">
