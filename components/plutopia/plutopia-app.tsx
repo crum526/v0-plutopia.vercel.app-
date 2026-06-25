@@ -15,7 +15,7 @@ import { useDraggableSidebar } from '@/hooks/use-draggable-sidebar'
 
 export function PlutopiaApp() {
   const { vodId, loading: vodLoading } = useLatestVod()
-  const [activeTab, setActiveTab] = useState('headquarters')
+  const [activeTab, setActiveTab] = useState('chat')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -47,9 +47,7 @@ export function PlutopiaApp() {
     })
 
   const handleTabChange = (tab: string) => {
-    if (tab === 'headquarters') {
-      setActiveTab(tab)
-    } else if (tab === 'shop' || tab === 'profile') {
+    if (tab === 'shop' || tab === 'profile') {
       setActiveTab(tab)
       const titles: Record<string, string> = {
         shop: 'Shop',
@@ -57,9 +55,6 @@ export function PlutopiaApp() {
       }
       setModalTitle(titles[tab])
       setModalOpen(true)
-    } else if (tab === 'chat') {
-      setActiveTab(tab)
-      setSidebarOpen(false)
     } else {
       setActiveTab(tab)
       setSidebarOpen(false)
@@ -120,11 +115,7 @@ export function PlutopiaApp() {
               </div>
             </div>
           )}
-          {activeTab === 'headquarters' && !isDesktop && (
-            <div className="w-full max-w-2xl mx-auto text-center flex-1 overflow-hidden">
-              <p className="text-plutopia-ghost">Headquarters content</p>
-            </div>
-          )}
+
         </main>
 
         {activeTab !== 'chat' && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} translateY={bottomNavTranslate} isDragging={isDragging} />}
@@ -134,7 +125,7 @@ export function PlutopiaApp() {
         isOpen={modalOpen}
         onClose={() => {
           setModalOpen(false)
-          setActiveTab('headquarters')
+          setActiveTab('chat')
         }}
         title={modalTitle}
       />
