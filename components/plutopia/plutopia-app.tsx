@@ -100,11 +100,11 @@ export function PlutopiaApp() {
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} channelName={activeTab} />
 
-        <main className={`flex-1 flex flex-col overflow-hidden ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 md:pb-4'}`}>
+        <main className={`flex-1 flex flex-col overflow-hidden pb-20 md:pb-0 ${activeTab === 'chat' ? '' : 'items-center justify-start px-4 py-2'}`}>
           {activeTab === 'chat' && <ChatPage />}
           {activeTab === 'vods' && (
-            <div className="w-full max-w-2xl mx-auto overflow-y-auto">
-              <div className="flex flex-col gap-4">
+            <div className="w-full max-w-2xl mx-auto overflow-y-auto flex-1">
+              <div className="flex flex-col gap-4 h-full">
                 <p className="text-plutopia-ghost text-base text-center pt-2">
                   {"Watch Pluto's V.O.D within 24 hrs to grow your stream streak 🔥"}
                 </p>
@@ -121,7 +121,7 @@ export function PlutopiaApp() {
             </div>
           )}
           {activeTab === 'headquarters' && !isDesktop && (
-            <div className="w-full max-w-2xl mx-auto text-center overflow-y-auto">
+            <div className="w-full max-w-2xl mx-auto text-center overflow-y-auto flex-1">
               <p className="text-plutopia-ghost">Headquarters content</p>
             </div>
           )}
