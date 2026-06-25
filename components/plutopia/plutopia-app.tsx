@@ -76,7 +76,7 @@ export function PlutopiaApp() {
   }
 
   return (
-    <div className="min-h-screen bg-plutopia-darker text-white flex">
+    <div className="h-screen bg-plutopia-darker text-white flex overflow-hidden">
       {/* Mobile sidebar drawer */}
       <Sidebar
         ref={sidebarRef}
@@ -97,13 +97,13 @@ export function PlutopiaApp() {
         onChannelClick={handleTabChange}
       />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} channelName={activeTab} />
 
-        <main className={`flex-1 flex flex-col ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 overflow-y-auto md:pb-4'}`}>
+        <main className={`flex-1 flex flex-col overflow-hidden ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 md:pb-4'}`}>
           {activeTab === 'chat' && <ChatPage />}
           {activeTab === 'vods' && (
-            <div className="w-full max-w-2xl mx-auto">
+            <div className="w-full max-w-2xl mx-auto overflow-y-auto">
               <div className="flex flex-col gap-4">
                 <p className="text-plutopia-ghost text-base text-center pt-2">
                   {"Watch Pluto's V.O.D within 24 hrs to grow your stream streak 🔥"}
@@ -121,7 +121,7 @@ export function PlutopiaApp() {
             </div>
           )}
           {activeTab === 'headquarters' && !isDesktop && (
-            <div className="w-full max-w-2xl mx-auto text-center">
+            <div className="w-full max-w-2xl mx-auto text-center overflow-y-auto">
               <p className="text-plutopia-ghost">Headquarters content</p>
             </div>
           )}
