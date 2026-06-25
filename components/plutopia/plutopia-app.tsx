@@ -8,6 +8,7 @@ import { Sidebar } from './sidebar'
 import { DesktopSidebar } from './sidebar-desktop'
 import { UnderConstructionModal } from './under-construction-modal'
 import { InstallPrompt } from './install-prompt'
+import { UpdatePrompt } from './update-prompt'
 import { ChatPage } from './chat-page'
 import { useLatestVod } from '@/hooks/use-latest-vod'
 import { useDraggableSidebar } from '@/hooks/use-draggable-sidebar'
@@ -139,6 +140,7 @@ export function PlutopiaApp() {
       />
 
       <InstallPrompt />
+      <UpdatePrompt />
     </div>
   )
 }
