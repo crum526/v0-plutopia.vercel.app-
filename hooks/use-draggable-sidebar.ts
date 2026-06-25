@@ -182,18 +182,16 @@ export function useDraggableSidebar({ onOpen, onClose, isOpen }: DraggableSideba
     const significantSwipe = absDx >= minSwipeDistance
 
     if (isOpen) {
-      if ((dx < threshold && significantSwipe) || fastSwipe) {
+      // When open: only close on left swipe (negative dx)
+      if ((dx < threshold && significantSwipe && dx < 0) || (fastSwipe && dx < 0)) {
         snap(-state.sidebarWidth)
-      } else if (significantSwipe) {
-        snap(0)
       } else {
-        snap(isOpen ? 0 : -state.sidebarWidth)
+        snap(0)
       }
     } else {
-      if ((dx > threshold && significantSwipe) || fastSwipe) {
+      // When closed: only open on right swipe (positive dx)
+      if ((dx > threshold && significantSwipe && dx > 0) || (fastSwipe && dx > 0)) {
         snap(0)
-      } else if (significantSwipe) {
-        snap(-state.sidebarWidth)
       } else {
         snap(-state.sidebarWidth)
       }

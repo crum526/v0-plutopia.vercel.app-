@@ -18,6 +18,13 @@ export function UpdatePrompt() {
       window.location.reload()
     }
 
+    const handleSWMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'SW_UPDATED') {
+        console.log('[v0] Service worker update notification received')
+        setShowUpdate(true)
+      }
+    }
+
     // Check for updates when the component mounts
     navigator.serviceWorker.ready.then((registration) => {
       console.log('[v0] Service worker ready')
@@ -46,21 +53,25 @@ export function UpdatePrompt() {
         }
       })
 
-      // Check for updates every 60 seconds
+      // Check for updates every 30 seconds instead of 60
       const interval = setInterval(() => {
         console.log('[v0] Checking for updates')
         registration.update().catch(() => {
           // Silently handle errors
         })
-      }, 60000)
+      }, 30000)
 
       return () => clearInterval(interval)
     })
 
+    // Listen for SW messages
+    navigator.serviceWorker.addEventListener('message', handleSWMessage)
+    
     // Listen for controller change to reload when update is applied
     navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange)
 
     return () => {
+      navigator.serviceWorker.removeEventListener('message', handleSWMessage)
       navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange)
     }
   }, [])

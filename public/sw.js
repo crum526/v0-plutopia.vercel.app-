@@ -1,7 +1,8 @@
-const CACHE_NAME = 'plutopia-v1';
+const CACHE_NAME = 'plutopia-' + new Date().getTime();
 const urlsToCache = ['/', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
+  console.log('[SW] Installing new service worker');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache).catch(() => {
@@ -13,11 +14,13 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating service worker');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
+            console.log('[SW] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -25,15 +28,22 @@ self.addEventListener('activate', (event) => {
     })
   );
   self.clients.claim();
-});
-
-self.addEventListener('install', (event) => {
-  // Skip waiting immediately to activate new version quickly
-  self.skipWaiting();
+  
+  // Notify all clients that an update is available
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'SW_UPDATED',
+        message: 'Service worker updated'
+      });
+    });
+  });
 });
 
 self.addEventListener('message', (event) => {
+  console.log('[SW] Message received:', event.data);
   if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('[SW] SKIP_WAITING received, skipping to next version');
     self.skipWaiting();
   }
 });

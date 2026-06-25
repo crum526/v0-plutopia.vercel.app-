@@ -15,7 +15,7 @@ import { useDraggableSidebar } from '@/hooks/use-draggable-sidebar'
 
 export function PlutopiaApp() {
   const { vodId, loading: vodLoading } = useLatestVod()
-  const [activeTab, setActiveTab] = useState('headquarters')
+  const [activeTab, setActiveTab] = useState('chat')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -47,9 +47,7 @@ export function PlutopiaApp() {
     })
 
   const handleTabChange = (tab: string) => {
-    if (tab === 'headquarters') {
-      setActiveTab(tab)
-    } else if (tab === 'shop' || tab === 'profile') {
+    if (tab === 'shop' || tab === 'profile') {
       setActiveTab(tab)
       const titles: Record<string, string> = {
         shop: 'Shop',
@@ -57,9 +55,6 @@ export function PlutopiaApp() {
       }
       setModalTitle(titles[tab])
       setModalOpen(true)
-    } else if (tab === 'chat') {
-      setActiveTab(tab)
-      setSidebarOpen(false)
     } else {
       setActiveTab(tab)
       setSidebarOpen(false)
@@ -76,7 +71,7 @@ export function PlutopiaApp() {
   }
 
   return (
-    <div className="min-h-screen bg-plutopia-darker text-white flex">
+    <div className="h-screen bg-plutopia-darker text-white flex overflow-hidden">
       {/* Mobile sidebar drawer */}
       <Sidebar
         ref={sidebarRef}
@@ -97,13 +92,13 @@ export function PlutopiaApp() {
         onChannelClick={handleTabChange}
       />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} channelName={activeTab} />
 
-        <main className={`flex-1 flex flex-col ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 overflow-y-auto md:pb-4'}`}>
+        <main className={`flex-1 flex flex-col overflow-hidden pb-20 md:pb-0 ${activeTab === 'chat' ? '' : 'items-center justify-start px-4 py-2'}`}>
           {activeTab === 'chat' && <ChatPage />}
           {activeTab === 'vods' && (
-            <div className="w-full max-w-2xl mx-auto">
+            <div className="w-full max-w-2xl mx-auto flex-1 overflow-hidden flex flex-col">
               <div className="flex flex-col gap-4">
                 <p className="text-plutopia-ghost text-base text-center pt-2">
                   {"Watch Pluto's V.O.D within 24 hrs to grow your stream streak 🔥"}
@@ -120,11 +115,7 @@ export function PlutopiaApp() {
               </div>
             </div>
           )}
-          {activeTab === 'headquarters' && !isDesktop && (
-            <div className="w-full max-w-2xl mx-auto text-center">
-              <p className="text-plutopia-ghost">Headquarters content</p>
-            </div>
-          )}
+
         </main>
 
         {activeTab !== 'chat' && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} translateY={bottomNavTranslate} isDragging={isDragging} />}
@@ -134,7 +125,7 @@ export function PlutopiaApp() {
         isOpen={modalOpen}
         onClose={() => {
           setModalOpen(false)
-          setActiveTab('headquarters')
+          setActiveTab('chat')
         }}
         title={modalTitle}
       />
