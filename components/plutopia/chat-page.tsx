@@ -102,9 +102,9 @@ export function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col w-full flex-1 bg-plutopia-darker text-white h-full overflow-hidden">
+    <div className="flex flex-col w-full flex-1 bg-plutopia-darker text-white h-full overflow-hidden pb-20 md:pb-0">
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2 min-h-0 flex flex-col">
+      <div className="flex-1 overflow-y-auto p-4 space-y-2 min-h-0">
         {messages.length === 0 ? (
           <div className="flex items-center justify-start pt-8 text-plutopia-ghost">
             <div className="text-center w-full">
