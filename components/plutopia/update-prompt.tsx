@@ -13,19 +13,32 @@ export function UpdatePrompt() {
     }
 
     const handleControllerChange = () => {
+      console.log('[v0] Service worker controller changed, reloading')
       setShowUpdate(false)
       window.location.reload()
     }
 
     // Check for updates when the component mounts
     navigator.serviceWorker.ready.then((registration) => {
+      console.log('[v0] Service worker ready')
+      
+      // Check if there's already a waiting worker
+      if (registration.waiting) {
+        console.log('[v0] Found existing waiting worker')
+        setWaitingWorker(registration.waiting)
+        setShowUpdate(true)
+      }
+
       // Listen for waiting service worker
       registration.addEventListener('updatefound', () => {
+        console.log('[v0] Update found')
         const newWorker = registration.installing
         if (newWorker) {
           newWorker.addEventListener('statechange', () => {
+            console.log('[v0] New worker state:', newWorker.state)
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               // New service worker is ready
+              console.log('[v0] New service worker installed and ready')
               setWaitingWorker(newWorker)
               setShowUpdate(true)
             }
@@ -35,6 +48,7 @@ export function UpdatePrompt() {
 
       // Check for updates every 60 seconds
       const interval = setInterval(() => {
+        console.log('[v0] Checking for updates')
         registration.update().catch(() => {
           // Silently handle errors
         })
@@ -53,7 +67,9 @@ export function UpdatePrompt() {
 
   const handleUpdate = () => {
     if (waitingWorker) {
+      console.log('[v0] Sending SKIP_WAITING to service worker')
       waitingWorker.postMessage({ type: 'SKIP_WAITING' })
+      setShowUpdate(false)
     }
   }
 
