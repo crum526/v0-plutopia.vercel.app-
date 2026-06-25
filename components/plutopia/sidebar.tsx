@@ -118,6 +118,7 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
             pointerEvents: isOpen || isDragging ? 'auto' : 'none',
             transition: !isHydrated || isDragging ? 'none' : 'opacity 0.3s ease',
             willChange: isHydrated ? 'opacity' : 'auto',
+            bottom: '80px',
           }}
           onClick={onClose}
         />

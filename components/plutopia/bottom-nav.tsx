@@ -17,7 +17,7 @@ export function BottomNav({ activeTab, onTabChange, translateY = 0, isDragging =
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 bg-plutopia-darker border-t border-plutopia-dark px-0 py-3 safe-area-inset-bottom z-[60]"
+      className="fixed bottom-0 left-0 right-0 bg-plutopia-darker border-t border-plutopia-dark px-0 py-3 safe-area-inset-bottom md:z-10 z-[999]"
       style={{
         transform: `translateY(${translateY}px)`,
         transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
