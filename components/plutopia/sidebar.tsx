@@ -34,9 +34,10 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
 
     return (
       <>
+        {/* Mobile drawer sidebar */}
         <div
           ref={ref}
-          className="fixed top-0 left-0 h-full bg-plutopia-darker border-r border-plutopia-dark z-50 md:hidden"
+          className="fixed md:hidden top-0 left-0 h-full bg-plutopia-darker border-r border-plutopia-dark z-50"
           style={{
             width: `${sidebarWidth}px`,
             transform: `translateX(${translateX}px)`,
@@ -109,8 +110,9 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
           </div>
         </div>
 
+        {/* Mobile overlay */}
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed md:hidden inset-0 bg-black bg-opacity-50 z-40"
           style={{
             opacity: overlayOpacity,
             pointerEvents: isOpen || isDragging ? 'auto' : 'none',
