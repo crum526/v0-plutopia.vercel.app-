@@ -118,7 +118,7 @@ export function PlutopiaApp() {
 
         </main>
 
-        {activeTab !== 'chat' && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} translateY={bottomNavTranslate} isDragging={isDragging} />}
+        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} translateY={bottomNavTranslate} isDragging={isDragging} />
       </div>
 
       <UnderConstructionModal
