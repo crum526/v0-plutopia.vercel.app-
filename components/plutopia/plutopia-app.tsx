@@ -97,7 +97,7 @@ export function PlutopiaApp() {
       />
 
       <div className="flex-1 flex flex-col">
-        <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} />
+        <Header onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} channelName={activeTab} />
 
         <main className={`flex-1 flex flex-col ${activeTab === 'chat' ? '' : 'items-center justify-start pb-32 px-4 py-2 overflow-y-auto md:pb-4'}`}>
           {activeTab === 'chat' && <ChatPage />}

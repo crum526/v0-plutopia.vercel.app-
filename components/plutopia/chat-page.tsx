@@ -103,14 +103,6 @@ export function ChatPage() {
 
   return (
     <div className="flex flex-col w-full flex-1 bg-plutopia-darker text-white h-full">
-      {/* Chat Header */}
-      <div className="border-b border-plutopia-dark px-4 py-3">
-        <h2 className="text-lg font-semibold flex items-center gap-2">
-          <span className="text-plutopia-accent">#</span>
-          Living Room
-        </h2>
-      </div>
-
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {messages.length === 0 ? (
