@@ -27,6 +27,11 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+self.addEventListener('install', (event) => {
+  // Skip waiting immediately to activate new version quickly
+  self.skipWaiting();
+});
+
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
