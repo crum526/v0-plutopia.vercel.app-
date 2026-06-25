@@ -1,4 +1,3 @@
-import { Ghost } from 'lucide-react'
 import { Emoji } from './emoji'
 
 interface DesktopSidebarProps {
@@ -24,7 +23,7 @@ export function DesktopSidebar({ onNavigateToVods, onChannelClick }: DesktopSide
   return (
     <div className="hidden md:flex md:w-64 bg-plutopia-darker border-r border-plutopia-dark flex-col h-screen sticky top-0">
       <div className="flex items-center gap-2 p-4 border-b border-plutopia-dark mt-4">
-        <Ghost size={24} className="text-plutopia-accent" />
+        <img src="/icon-512x512.png" alt="Plutopia icon" className="w-6 h-6 rounded" />
         <span className="text-white font-semibold">Plutopia</span>
       </div>
 

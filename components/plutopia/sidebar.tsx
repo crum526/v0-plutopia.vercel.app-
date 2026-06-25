@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { Ghost, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { Emoji } from './emoji'
 
 interface SidebarProps {
@@ -49,7 +49,7 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between p-4 border-b border-plutopia-dark mt-4">
               <div className="flex items-center gap-2">
-                <Ghost size={24} className="text-plutopia-accent" />
+                <img src="/icon-512x512.png" alt="Plutopia icon" className="w-6 h-6 rounded" />
                 <span className="text-white font-semibold">Plutopia</span>
               </div>
               <button
